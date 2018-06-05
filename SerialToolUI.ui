@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Espressif</class>
+ <widget class="QWidget" name="Espressif">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>884</width>
-    <height>828</height>
+    <width>865</width>
+    <height>768</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -237,16 +237,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit_show">
-   <property name="geometry">
-    <rect>
-     <x>220</x>
-     <y>50</y>
-     <width>631</width>
-     <height>421</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QPushButton" name="saveInfo">
    <property name="geometry">
     <rect>
@@ -318,8 +308,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>90</y>
+     <x>180</x>
+     <y>20</y>
      <width>71</width>
      <height>21</height>
     </rect>
@@ -339,6 +329,16 @@
    </property>
    <property name="text">
     <string>发送新行</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="InfoBrower">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>50</y>
+     <width>621</width>
+     <height>381</height>
+    </rect>
    </property>
   </widget>
  </widget>

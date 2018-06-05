@@ -1,6 +1,7 @@
 import SerialToolUI
 import threading
 import os
+import sys
 import time
 import serial
 import serial.tools.list_ports
@@ -8,6 +9,17 @@ from PyQt4 import QtCore, QtGui
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
+'''
+ from PyQt4.QtGui import *
+ from PyQt4.QtCore import *
+        palette1 = QtGui.QPalette(self)
+        palette1.setColor(self.backgroundRole(), QColor(192,253,123))   # 设置背景颜色
+        # palette1.setBrush(self.backgroundRole(), QtGui.QBrush(QtGui.QPixmap('../../../Document/images/17_big.jpg')))   # 设置背景图片
+        self.setPalette(palette1)       
+'''
+
+
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -25,8 +37,6 @@ except AttributeError:
     
     
 plist = []
-
-
 def SerialTool(plist):
     if len(plist) <= 0:
         print ("The Serial port can't find!")
@@ -48,14 +58,12 @@ def SerialTool(plist):
             elif timeFlag == 0:
                 print time.asctime( time.localtime(time.time()) ) + serialFd.readline()
                 
-
-class UI_Test(SerialToolUI.Ui_Form,QtGui.QWidget):
-    
+class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
     
     _printLog = QtCore.pyqtSignal(str)
     _OpenCloseFlag = 0
     _timeFlag = 0
-    
+    _sendNewLine = 0
     
     def __init__(self, SerialTool, parent=None):
         super(QtGui.QWidget, self).__init__(parent=parent)
@@ -70,82 +78,121 @@ class UI_Test(SerialToolUI.Ui_Form,QtGui.QWidget):
             print ("The Serial port can't find!")
         else:
             for i in plist:
-                print str(i)[0:int(str(i).find(" "))]
-                self.comchoose.addItem(str(i)[0:int(str(i).find(" "))])
+                print i[0]#str(i)[0:int(str(i).find(" "))]
+                self.comchoose.addItem(_fromUtf8(i[0]))
+                #self.comchoose.addItem(str(i)[0:int(str(i).find(" "))])
     
         
     def serialFoo(self,SerialTool):
         self.portoperate.clicked.connect(self.portoperateFoo)
-        self.Time.clicked.connect(self.timeLog)
-        #self._printLog.connect(self.printLog)
+        #Sself.Time.clicked.connect(self.timeLog)
+        self._printLog.connect(self.printLog)
+        self.Time.stateChanged.connect(self.changeTimeStatus)
+        self.SendNewLine.stateChanged.connect(self.addNewSendLine)
+        self.saveInfo.clicked.connect(self.saveInfofoo)
+        self.clearInfo.clicked.connect(self.ClearInfoFoo)
+        self.inFoSend.clicked.connect(self.inFoSendFoo)
+        self.InfoClear.clicked.connect(self.InfoClearFoo)
     
-    def timeLog(self):
-        if _timeFlag == 0:
-            _timeFlag==1;
-        else:
-            _timeFlag = 0
-            
+    
+    def InfoClearFoo(self):
+        self.lineEditCommand.clear()
+    
+    def ClearInfoFoo(self):
+        self.InfoBrower.clear()
+    
+    def saveInfofoo(self, SerialTool):
+        filename = QtGui.QFileDialog.getSaveFileName(None, 'Save file', './')
+        try:
+            with open(filename, 'w') as fd:
+                fd.write(str(self.InfoBrower.toPlainText()))
+        except:
+            pass   
         
     def portoperateFoo(self):
-        if self._OpenCloseFlag == 0:
+        print self._OpenCloseFlag
+        if self._OpenCloseFlag == 1:
+            self.portoperate.setText('Close')
+            print "()()()()"
+            self._OpenCloseFlag = 0
+            self._ser.close
+
+            print "IS CLOSE STATUS"
+            return
+        elif self._OpenCloseFlag == 0:
             self._OpenCloseFlag = 1
+            self.portoperate.setText('Open')
             
-            if str(self.checkchoose.currentText()).find('custom') >= 0:             
-                baudRate = int(self.baudEdit.text())
-            else:
-                baudRate = str(self.baudratelchoose.currentText())
+            baudRate = str(self.baudratelchoose.currentText())
                 #self.baudEdit.setText(baud_rate)
                 
-            
             comPort = str(self.comchoose.currentText())
-            baudRate =  int(self.baudratelchoose.currentText())  
-            print "================="
-            comPort = "COM47"
-            print baudRate
-            self._ser = serial.Serial(port=comPort,
-                                      baudrate=baudRate,
-                                            parity=serial.PARITY_NONE,stopbits=1,bytesize=8) 
-            #self._ser.open()
-            #self.serialFd = serial.Serial(port=comPort,baudrate=baundRate,timeout = 60)
-            
+            baudRate_t =  int(self.baudratelchoose.currentText())  
+            stopbits_t = int(self.stopChoose.currentText( ))
+            data_t = int(self.datachoose.currentText( ))        
             '''
             if(str(self.checkchoose.currentText()) == '无'):
-                erialFd.parity = serial.PARITY_NONE
+                parity = serial.PARITY_NONE
             elif(str(self.checkchoose.currentText()) == '奇校验'):
-                serialFd.parity = serial.PARITY_ODD
+                serial.parity = serial.PARITY_ODD
             elif(str(self.checkchoose.currentText()) == '偶校验'):
-                serialFd.parity = serial.PARITY_EVEN
-            serialFd.stopbits = int(self.stopChoose.currentText())
+                serial.parity = serial.PARITY_EVEN
             '''
-            t1 = threading.Thread(target=self.cycTask)
-            t1.start()    
-        elif self._OpenCloseFlag == 1:
-            self._OpenCloseFlag == 0
+            try:
+                self._ser = serial.Serial(port=comPort,
+                                        baudrate=115200,
+                                        parity=serial.PARITY_NONE,stopbits=1,bytesize=8)
+
+            except:
+                self.printLog('open serial fail...')
+                return  
+
+            t1 = threading.Thread(target=self.cycTask,)
+            t1.start()  
         
-        print str(self._OpenCloseFlag) + "----"
+            
+            print self._OpenCloseFlag
+            
+        print "[][][][][][][][]"
+    def cycTask(self):
+        while True:
+            #print str(time.asctime( time.localtime(time.time()) ) + self._ser.readline())
+            self._printLog.emit( self._ser.readline())
 
     def printLog(self, log):
-            print log
-            
-    def cycTask(self):
-            while True:
-                if self._OpenCloseFlag == 0:
-                    print "Close"
-                elif self._OpenCloseFlag == 1:
-                    print "Open"
-                #print str(time.asctime( time.localtime(time.time()) ) + self._ser.readline())
-                #self._printLog.emit(time.asctime( time.localtime(time.time()) ) + self._ser.readline())
-                time.sleep(1)            
-            
-            
+        if self._timeFlag == 1:
+            print  time.asctime( time.localtime(time.time()) )+"[LOG]"+log
+            if log != "":
+                self.InfoBrower.append(time.asctime( time.localtime(time.time()) )+" => "+log)
+        elif self._timeFlag == 0:
+            self.InfoBrower.append(log)
+
+    def changeTimeStatus(self, state):
+        if state == QtCore.Qt.Checked:
+            self._timeFlag = 1
+        else:
+            self._timeFlag = 0
     
+    def addNewSendLine(self, state):
+        if state == QtCore.Qt.Checked:
+            self._sendNewLine = 1
+            print ('QtGui.QCheckBox')
+        else:
+            self._sendNewLine = 0
+            
+    def inFoSendFoo(self):
+        print self.lineEditCommand.text()
+        if self._sendNewLine==1:
+            self._ser.write(str(self.lineEditCommand.text())+"\r\n")
+        else:
+            self._ser.write(str(self.lineEditCommand.text()))
 
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
     SerialTool = QtGui.QWidget()
     SerialToolui = UI_Test(SerialTool)
-    SerialToolui.setupUi(SerialTool)
+    #SerialToolui.setupUi(SerialTool)
     #SerialTool.show()
     SerialToolui.show()
     sys.exit(app.exec_())
