@@ -120,7 +120,7 @@ class Ui_Form(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        Form.setWindowTitle(_translate("Form", "Form", None))
+        Form.setWindowTitle(_translate("Espressif", "Espressif", None))
         self.portchoose_t.setText(_translate("Form", "串口选择", None))
         self.baudratelchoose.setItemText(0, _translate("Form", "921600", None))
         self.baudratelchoose.setItemText(1, _translate("Form", "115200", None))
