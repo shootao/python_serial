@@ -146,7 +146,6 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
     def checkSend4Foo(self, state):
         if state == QtCore.Qt.Checked:
             self._sendText_4 = 1
-            print ('QtGui.QCheckBox')
         else:
             self._sendText_4 = 0        
         pass
@@ -154,7 +153,7 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
     def checkSend5Foo(self, state):
         if state == QtCore.Qt.Checked:
             self._sendText_5 = 1
-            print ('QtGui.QCheckBox')
+
         else:
             self._sendText_5 = 0        
         pass
@@ -162,7 +161,6 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
     def checkSend6Foo(self, state):
         if state == QtCore.Qt.Checked:
             self._sendText_6 = 1
-            print ('QtGui.QCheckBox')
         else:
             self._sendText_6 = 0
         pass    
@@ -191,7 +189,6 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
             pass   
         
     def portoperateFoo(self):
-        print self._OpenCloseFlag
         if self._OpenCloseFlag == 1:
             self.portoperate.setStyleSheet("background-color: green")
             self.portoperate.setText('Close')
@@ -221,7 +218,6 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
 
             t1 = threading.Thread(target=self.cycTask,)
             t1.start()  
-            print self._OpenCloseFlag
 
     def cycTask(self):
         while True:
@@ -246,14 +242,12 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
     def addNewSendLine(self, state):
         if state == QtCore.Qt.Checked:
             self._sendNewLine = 1
-            print ('QtGui.QCheckBox')
         else:
             self._sendNewLine = 0
             
     def addNewSendLine_M(self, state):
         if state == QtCore.Qt.Checked:
             self._sendNewLine_M = 1
-            print ('QtGui.QCheckBox')
         else:
             self._sendNewLine_M = 0    
             
@@ -265,7 +259,6 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
             self._ser.write(str(self.lineEditCommand.text()))
             
     def inFoSend_MFoo(self, state):
-        print "SEND SEND"
         if self._sendText_1 == 1:
             if self._sendNewLine_M==1:
                 self._ser.write(str(self.lineEditCommand1.text())+"\r\n")
