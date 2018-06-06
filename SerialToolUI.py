@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'SerialToolUI.ui'
 #
-# Created: Tue Jun 05 15:57:25 2018
+# Created: Wed Jun 06 09:39:06 2018
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -34,7 +34,6 @@ class Ui_Espressif(object):
         self.baudratelchoose.setEnabled(True)
         self.baudratelchoose.setGeometry(QtCore.QRect(90, 90, 91, 21))
         self.baudratelchoose.setObjectName(_fromUtf8("baudratelchoose"))
-        self.baudratelchoose.addItem(_fromUtf8(""))
         self.baudratelchoose.addItem(_fromUtf8(""))
         self.baudratelchoose.addItem(_fromUtf8(""))
         self.baudratelchoose.addItem(_fromUtf8(""))
@@ -117,7 +116,6 @@ class Ui_Espressif(object):
         self.baudratelchoose.setItemText(0, _translate("Espressif", "921600", None))
         self.baudratelchoose.setItemText(1, _translate("Espressif", "115200", None))
         self.baudratelchoose.setItemText(2, _translate("Espressif", "74880", None))
-        self.baudratelchoose.setItemText(3, _translate("Espressif", "Custom", None))
         self.baundrate_t.setText(_translate("Espressif", "波特率", None))
         self.stop_t.setText(_translate("Espressif", "停止位", None))
         self.stopChoose.setItemText(0, _translate("Espressif", "1", None))

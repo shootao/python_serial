@@ -6,6 +6,8 @@ import time
 import serial
 import serial.tools.list_ports
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -71,6 +73,8 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
         self.setupUi(self)
         self.serialFoo(self)
         self.cominfoget(self)
+        self.portoperate.setStyleSheet("background-color: green")
+        
     
     def cominfoget(self, SerialTool):
         plist = list(serial.tools.list_ports.comports())
@@ -112,39 +116,31 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
     def portoperateFoo(self):
         print self._OpenCloseFlag
         if self._OpenCloseFlag == 1:
+            self.portoperate.setStyleSheet("background-color: green")
             self.portoperate.setText('Close')
-            print "()()()()"
             self._OpenCloseFlag = 0
-            self._ser.close
-
-            print "IS CLOSE STATUS"
+            #self._ser.close()
             return
         elif self._OpenCloseFlag == 0:
             self._OpenCloseFlag = 1
+            self.portoperate.setStyleSheet("background-color: red")
             self.portoperate.setText('Open')
             
-            baudRate = str(self.baudratelchoose.currentText())
-                #self.baudEdit.setText(baud_rate)
-                
             comPort = str(self.comchoose.currentText())
-            baudRate_t =  int(self.baudratelchoose.currentText())  
-            stopbits_t = int(self.stopChoose.currentText( ))
-            data_t = int(self.datachoose.currentText( ))        
-            '''
-            if(str(self.checkchoose.currentText()) == '无'):
-                parity = serial.PARITY_NONE
-            elif(str(self.checkchoose.currentText()) == '奇校验'):
-                serial.parity = serial.PARITY_ODD
-            elif(str(self.checkchoose.currentText()) == '偶校验'):
-                serial.parity = serial.PARITY_EVEN
-            '''
+            baudRate = int(self.baudratelchoose.currentText())        
+         
             try:
                 self._ser = serial.Serial(port=comPort,
-                                        baudrate=115200,
+                                        baudrate=baudRate,
                                         parity=serial.PARITY_NONE,stopbits=1,bytesize=8)
 
             except:
-                self.printLog('open serial fail...')
+                #self.printLog('open serial fail...')
+                #msg_box = QMessageBox(QMessageBox.Warning, "Alert", "Please configure the baseline!")
+                #msg_box.show()          
+                QMessageBox.information(self,                         #使用infomation信息框    
+                                        "Waring",    
+                            "The serial port is occupied")                
                 return  
 
             t1 = threading.Thread(target=self.cycTask,)
@@ -152,8 +148,7 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
         
             
             print self._OpenCloseFlag
-            
-        print "[][][][][][][][]"
+
     def cycTask(self):
         while True:
             #print str(time.asctime( time.localtime(time.time()) ) + self._ser.readline())
@@ -186,6 +181,8 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
             self._ser.write(str(self.lineEditCommand.text())+"\r\n")
         else:
             self._ser.write(str(self.lineEditCommand.text()))
+            
+ 
 
 if __name__ == "__main__":
     import sys
