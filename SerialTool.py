@@ -39,6 +39,7 @@ except AttributeError:
     
     
 plist = []
+
 def SerialTool(plist):
     if len(plist) <= 0:
         print ("The Serial port can't find!")
@@ -66,9 +67,19 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
     _OpenCloseFlag = 0
     _timeFlag = 0
     _sendNewLine = 0
+    _sendText_1=0
+    _sendText_2=0
+    _sendText_3=0
+    _sendText_4=0
+    _sendText_5=0
+    _sendText_6=0
+    _sendNewLine_M = 0
+    
     
     def __init__(self, SerialTool, parent=None):
         super(QtGui.QWidget, self).__init__(parent=parent)
+        self._cycTaskFlag = 1
+        self.iii = 0
         #self._SignalStart.connect(self.ok_button)
         self.setupUi(self)
         self.serialFoo(self)
@@ -97,11 +108,77 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
         self.clearInfo.clicked.connect(self.ClearInfoFoo)
         self.inFoSend.clicked.connect(self.inFoSendFoo)
         self.InfoClear.clicked.connect(self.InfoClearFoo)
+        self.inFoSend_M.clicked.connect(self.inFoSend_MFoo)
+        
+        self.checkSend1.stateChanged.connect(self.checkSend1Foo)
+        self.checkSend2.stateChanged.connect(self.checkSend2Foo)
+        self.checkSend3.stateChanged.connect(self.checkSend3Foo)
+        self.checkSend4.stateChanged.connect(self.checkSend4Foo)
+        self.checkSend5.stateChanged.connect(self.checkSend5Foo)
+        self.checkSend6.stateChanged.connect(self.checkSend6Foo)
+        self.SendNewLine_M.stateChanged.connect(self.addNewSendLine_M)
+        self.InFoClear_M.clicked.connect(self.InFoClear_MFoo)
+        
+    def checkSend1Foo(self, state):
+        if state == QtCore.Qt.Checked:
+            self._sendText_1 = 1
+            print ('QtGui.QCheckBox')
+        else:
+            self._sendText_1 = 0        
+        pass
     
+    def checkSend2Foo(self, state):
+        if state == QtCore.Qt.Checked:
+            self._sendText_2 = 1
+            print ('QtGui.QCheckBox')
+        else:
+            self._sendText_2 = 0        
+        pass
     
+    def checkSend3Foo(self, state):
+        if state == QtCore.Qt.Checked:
+            self._sendText_3 = 1
+            print ('QtGui.QCheckBox')
+        else:
+            self._sendText_3 = 0        
+        pass
+    
+    def checkSend4Foo(self, state):
+        if state == QtCore.Qt.Checked:
+            self._sendText_4 = 1
+            print ('QtGui.QCheckBox')
+        else:
+            self._sendText_4 = 0        
+        pass
+    
+    def checkSend5Foo(self, state):
+        if state == QtCore.Qt.Checked:
+            self._sendText_5 = 1
+            print ('QtGui.QCheckBox')
+        else:
+            self._sendText_5 = 0        
+        pass
+    
+    def checkSend6Foo(self, state):
+        if state == QtCore.Qt.Checked:
+            self._sendText_6 = 1
+            print ('QtGui.QCheckBox')
+        else:
+            self._sendText_6 = 0
+        pass    
+    
+
     def InfoClearFoo(self):
         self.lineEditCommand.clear()
     
+    def InFoClear_MFoo(self):
+        self.lineEditCommand1.clear() 
+        self.lineEditCommand2.clear() 
+        self.lineEditCommand3.clear() 
+        self.lineEditCommand4.clear() 
+        self.lineEditCommand5.clear() 
+        self.lineEditCommand6.clear()         
+
     def ClearInfoFoo(self):
         self.InfoBrower.clear()
     
@@ -119,13 +196,14 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
             self.portoperate.setStyleSheet("background-color: green")
             self.portoperate.setText('Close')
             self._OpenCloseFlag = 0
-            #self._ser.close()
+            #q = self._ser.close()
+            self._cycTaskFlag = 0
             return
         elif self._OpenCloseFlag == 0:
             self._OpenCloseFlag = 1
             self.portoperate.setStyleSheet("background-color: red")
             self.portoperate.setText('Open')
-            
+            self._cycTaskFlag = 1
             comPort = str(self.comchoose.currentText())
             baudRate = int(self.baudratelchoose.currentText())        
          
@@ -138,21 +216,18 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
                 #self.printLog('open serial fail...')
                 #msg_box = QMessageBox(QMessageBox.Warning, "Alert", "Please configure the baseline!")
                 #msg_box.show()          
-                QMessageBox.information(self,                         #使用infomation信息框    
-                                        "Waring",    
-                            "The serial port is occupied")                
+                #QMessageBox.information(self,  "Waring","The serial port is occupied")                
                 return  
 
             t1 = threading.Thread(target=self.cycTask,)
             t1.start()  
-        
-            
             print self._OpenCloseFlag
 
     def cycTask(self):
         while True:
-            #print str(time.asctime( time.localtime(time.time()) ) + self._ser.readline())
-            self._printLog.emit( self._ser.readline())
+            if self._cycTaskFlag:
+                #print str(time.asctime( time.localtime(time.time()) ) + self._ser.readline())
+                self._printLog.emit( self._ser.readline())
 
     def printLog(self, log):
         if self._timeFlag == 1:
@@ -175,6 +250,13 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
         else:
             self._sendNewLine = 0
             
+    def addNewSendLine_M(self, state):
+        if state == QtCore.Qt.Checked:
+            self._sendNewLine_M = 1
+            print ('QtGui.QCheckBox')
+        else:
+            self._sendNewLine_M = 0    
+            
     def inFoSendFoo(self):
         print self.lineEditCommand.text()
         if self._sendNewLine==1:
@@ -182,6 +264,40 @@ class UI_Test(SerialToolUI.Ui_Espressif,QtGui.QWidget):
         else:
             self._ser.write(str(self.lineEditCommand.text()))
             
+    def inFoSend_MFoo(self, state):
+        print "SEND SEND"
+        if self._sendText_1 == 1:
+            if self._sendNewLine_M==1:
+                self._ser.write(str(self.lineEditCommand1.text())+"\r\n")
+            else:
+                self._ser.write(str(self.lineEditCommand1.text()))
+        elif self._sendText_2 == 1:
+            if self._sendNewLine_M==1:
+                self._ser.write(str(self.lineEditCommand2.text())+"\r\n")
+            else:
+                self._ser.write(str(self.lineEditCommand2.text()))            
+        elif self._sendText_3 == 1:
+            if self._sendNewLine_M==1:
+                self._ser.write(str(self.lineEditCommand3.text())+"\r\n")
+            else:
+                self._ser.write(str(self.lineEditCommand3.text()))    
+        elif self._sendText_4 == 1:
+            if self._sendNewLine_M==1:
+                self._ser.write(str(self.lineEditCommand4.text())+"\r\n")
+            else:
+                self._ser.write(str(self.lineEditCommand4.text())) 
+        elif self._sendText_5 == 1:
+            if self._sendNewLine_M==1:
+                self._ser.write(str(self.lineEditCommand5.text())+"\r\n")
+            else:
+                self._ser.write(str(self.lineEditCommand5.text()))    
+        elif self._sendText_6 == 1:
+            if self._sendNewLine_M==1:
+                self._ser.write(str(self.lineEditCommand6.text())+"\r\n")
+            else:
+                self._ser.write(str(self.lineEditCommand6.text()))            
+        
+
  
 
 if __name__ == "__main__":

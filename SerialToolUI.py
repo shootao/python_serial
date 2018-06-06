@@ -2,13 +2,16 @@
 
 # Form implementation generated from reading ui file 'SerialToolUI.ui'
 #
-# Created: Wed Jun 06 09:39:06 2018
+# Created: Wed Jun 06 12:55:46 2018
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
-
-from PyQt4 import QtCore, QtGui
-
+# -*- coding: utf-8 -*-
+from PyQt4 import QtCore
+from PyQt4 import QtGui
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+import sys
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -23,12 +26,19 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_Espressif(object):
+class Ui_Espressif(QtGui.QWidget):
     def setupUi(self, Espressif):
         Espressif.setObjectName(_fromUtf8("Espressif"))
         Espressif.resize(865, 768)
         self.portchoose_t = QtGui.QLabel(Espressif)
+        
+        palette1 = QtGui.QPalette(self)
+        #palette1.setColor(self.backgroundRole(), QColor(192,253,123))   # 设置背景颜色
+        palette1.setBrush(self.backgroundRole(), QtGui.QBrush(QtGui.QPixmap('./image/BackGround.PNG')))   # 设置背景图片
+        self.setPalette(palette1)        
+        
         self.portchoose_t.setGeometry(QtCore.QRect(20, 50, 72, 15))
+        self.setWindowIcon(QIcon('./image/espressif.png'))
         self.portchoose_t.setObjectName(_fromUtf8("portchoose_t"))
         self.baudratelchoose = QtGui.QComboBox(Espressif)
         self.baudratelchoose.setEnabled(True)
@@ -37,9 +47,11 @@ class Ui_Espressif(object):
         self.baudratelchoose.addItem(_fromUtf8(""))
         self.baudratelchoose.addItem(_fromUtf8(""))
         self.baudratelchoose.addItem(_fromUtf8(""))
+        self.baudratelchoose.addItem(_fromUtf8(""))
         self.comchoose = QtGui.QComboBox(Espressif)
         self.comchoose.setGeometry(QtCore.QRect(90, 50, 91, 21))
         self.comchoose.setObjectName(_fromUtf8("comchoose"))
+        self.comchoose.addItem(_fromUtf8(""))
         self.baundrate_t = QtGui.QLabel(Espressif)
         self.baundrate_t.setGeometry(QtCore.QRect(20, 90, 72, 15))
         self.baundrate_t.setObjectName(_fromUtf8("baundrate_t"))
@@ -77,9 +89,6 @@ class Ui_Espressif(object):
         self.portoperate = QtGui.QPushButton(Espressif)
         self.portoperate.setGeometry(QtCore.QRect(90, 270, 93, 28))
         self.portoperate.setObjectName(_fromUtf8("portoperate"))
-        self.lineEditCommand = QtGui.QLineEdit(Espressif)
-        self.lineEditCommand.setGeometry(QtCore.QRect(10, 490, 721, 161))
-        self.lineEditCommand.setObjectName(_fromUtf8("lineEditCommand"))
         self.saveInfo = QtGui.QPushButton(Espressif)
         self.saveInfo.setGeometry(QtCore.QRect(10, 330, 93, 28))
         self.saveInfo.setObjectName(_fromUtf8("saveInfo"))
@@ -89,25 +98,84 @@ class Ui_Espressif(object):
         self.Time = QtGui.QCheckBox(Espressif)
         self.Time.setGeometry(QtCore.QRect(10, 380, 91, 19))
         self.Time.setObjectName(_fromUtf8("Time"))
-        self.inFoSend = QtGui.QPushButton(Espressif)
-        self.inFoSend.setGeometry(QtCore.QRect(750, 490, 93, 28))
-        self.inFoSend.setObjectName(_fromUtf8("inFoSend"))
-        self.InfoClear = QtGui.QPushButton(Espressif)
-        self.InfoClear.setGeometry(QtCore.QRect(750, 550, 93, 28))
-        self.InfoClear.setObjectName(_fromUtf8("InfoClear"))
-        self.baudEdit = QtGui.QLineEdit(Espressif)
-        self.baudEdit.setEnabled(True)
-        self.baudEdit.setGeometry(QtCore.QRect(180, 20, 71, 21))
-        self.baudEdit.setReadOnly(False)
-        self.baudEdit.setObjectName(_fromUtf8("baudEdit"))
-        self.SendNewLine = QtGui.QCheckBox(Espressif)
-        self.SendNewLine.setGeometry(QtCore.QRect(750, 610, 91, 19))
-        self.SendNewLine.setObjectName(_fromUtf8("SendNewLine"))
         self.InfoBrower = QtGui.QTextBrowser(Espressif)
         self.InfoBrower.setGeometry(QtCore.QRect(240, 50, 621, 381))
         self.InfoBrower.setObjectName(_fromUtf8("InfoBrower"))
+        self.TabWidget = QtGui.QTabWidget(Espressif)
+        self.TabWidget.setGeometry(QtCore.QRect(10, 460, 851, 291))
+        self.TabWidget.setObjectName(_fromUtf8("TabWidget"))
+        self.tab_3 = QtGui.QWidget()
+        self.tab_3.setObjectName(_fromUtf8("tab_3"))
+        self.inFoSend = QtGui.QPushButton(self.tab_3)
+        self.inFoSend.setGeometry(QtCore.QRect(730, 20, 93, 28))
+        self.inFoSend.setObjectName(_fromUtf8("inFoSend"))
+        self.InfoClear = QtGui.QPushButton(self.tab_3)
+        self.InfoClear.setGeometry(QtCore.QRect(730, 110, 93, 28))
+        self.InfoClear.setObjectName(_fromUtf8("InfoClear"))
+        self.SendNewLine = QtGui.QCheckBox(self.tab_3)
+        self.SendNewLine.setGeometry(QtCore.QRect(730, 210, 91, 19))
+        self.SendNewLine.setObjectName(_fromUtf8("SendNewLine"))
+        self.lineEditCommand = QtGui.QLineEdit(self.tab_3)
+        self.lineEditCommand.setGeometry(QtCore.QRect(0, 0, 721, 261))
+        self.lineEditCommand.setObjectName(_fromUtf8("lineEditCommand"))
+        self.TabWidget.addTab(self.tab_3, _fromUtf8(""))
+        self.tab_4 = QtGui.QWidget()
+        self.tab_4.setObjectName(_fromUtf8("tab_4"))
+        self.checkSend1 = QtGui.QCheckBox(self.tab_4)
+        self.checkSend1.setGeometry(QtCore.QRect(10, 30, 91, 19))
+        self.checkSend1.setText(_fromUtf8(""))
+        self.checkSend1.setObjectName(_fromUtf8("checkSend1"))
+        self.checkSend2 = QtGui.QCheckBox(self.tab_4)
+        self.checkSend2.setGeometry(QtCore.QRect(10, 70, 91, 19))
+        self.checkSend2.setText(_fromUtf8(""))
+        self.checkSend2.setObjectName(_fromUtf8("checkSend2"))
+        self.checkSend3 = QtGui.QCheckBox(self.tab_4)
+        self.checkSend3.setGeometry(QtCore.QRect(10, 110, 91, 19))
+        self.checkSend3.setText(_fromUtf8(""))
+        self.checkSend3.setObjectName(_fromUtf8("checkSend3"))
+        self.checkSend4 = QtGui.QCheckBox(self.tab_4)
+        self.checkSend4.setGeometry(QtCore.QRect(10, 150, 91, 19))
+        self.checkSend4.setText(_fromUtf8(""))
+        self.checkSend4.setObjectName(_fromUtf8("checkSend4"))
+        self.checkSend5 = QtGui.QCheckBox(self.tab_4)
+        self.checkSend5.setGeometry(QtCore.QRect(10, 190, 91, 19))
+        self.checkSend5.setText(_fromUtf8(""))
+        self.checkSend5.setObjectName(_fromUtf8("checkSend5"))
+        self.checkSend6 = QtGui.QCheckBox(self.tab_4)
+        self.checkSend6.setGeometry(QtCore.QRect(10, 230, 91, 19))
+        self.checkSend6.setText(_fromUtf8(""))
+        self.checkSend6.setObjectName(_fromUtf8("checkSend6"))
+        self.lineEditCommand1 = QtGui.QLineEdit(self.tab_4)
+        self.lineEditCommand1.setGeometry(QtCore.QRect(40, 30, 641, 21))
+        self.lineEditCommand1.setObjectName(_fromUtf8("lineEditCommand1"))
+        self.lineEditCommand2 = QtGui.QLineEdit(self.tab_4)
+        self.lineEditCommand2.setGeometry(QtCore.QRect(40, 70, 641, 21))
+        self.lineEditCommand2.setObjectName(_fromUtf8("lineEditCommand2"))
+        self.lineEditCommand3 = QtGui.QLineEdit(self.tab_4)
+        self.lineEditCommand3.setGeometry(QtCore.QRect(40, 110, 641, 21))
+        self.lineEditCommand3.setObjectName(_fromUtf8("lineEditCommand3"))
+        self.lineEditCommand4 = QtGui.QLineEdit(self.tab_4)
+        self.lineEditCommand4.setGeometry(QtCore.QRect(40, 150, 641, 21))
+        self.lineEditCommand4.setObjectName(_fromUtf8("lineEditCommand4"))
+        self.lineEditCommand5 = QtGui.QLineEdit(self.tab_4)
+        self.lineEditCommand5.setGeometry(QtCore.QRect(40, 190, 641, 21))
+        self.lineEditCommand5.setObjectName(_fromUtf8("lineEditCommand5"))
+        self.lineEditCommand6 = QtGui.QLineEdit(self.tab_4)
+        self.lineEditCommand6.setGeometry(QtCore.QRect(40, 230, 641, 21))
+        self.lineEditCommand6.setObjectName(_fromUtf8("lineEditCommand6"))
+        self.inFoSend_M = QtGui.QPushButton(self.tab_4)
+        self.inFoSend_M.setGeometry(QtCore.QRect(720, 30, 93, 28))
+        self.inFoSend_M.setObjectName(_fromUtf8("inFoSend_M"))
+        self.InFoClear_M = QtGui.QPushButton(self.tab_4)
+        self.InFoClear_M.setGeometry(QtCore.QRect(720, 120, 93, 28))
+        self.InFoClear_M.setObjectName(_fromUtf8("InFoClear_M"))
+        self.SendNewLine_M = QtGui.QCheckBox(self.tab_4)
+        self.SendNewLine_M.setGeometry(QtCore.QRect(720, 210, 91, 19))
+        self.SendNewLine_M.setObjectName(_fromUtf8("SendNewLine_M"))
+        self.TabWidget.addTab(self.tab_4, _fromUtf8(""))
 
         self.retranslateUi(Espressif)
+        self.TabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Espressif)
 
     def retranslateUi(self, Espressif):
@@ -116,6 +184,8 @@ class Ui_Espressif(object):
         self.baudratelchoose.setItemText(0, _translate("Espressif", "921600", None))
         self.baudratelchoose.setItemText(1, _translate("Espressif", "115200", None))
         self.baudratelchoose.setItemText(2, _translate("Espressif", "74880", None))
+        self.baudratelchoose.setItemText(3, _translate("Espressif", "Custom", None))
+        self.comchoose.setItemText(0, _translate("Espressif", "   ---", None))
         self.baundrate_t.setText(_translate("Espressif", "波特率", None))
         self.stop_t.setText(_translate("Espressif", "停止位", None))
         self.stopChoose.setItemText(0, _translate("Espressif", "1", None))
@@ -138,6 +208,11 @@ class Ui_Espressif(object):
         self.inFoSend.setText(_translate("Espressif", "发送", None))
         self.InfoClear.setText(_translate("Espressif", "清除发送", None))
         self.SendNewLine.setText(_translate("Espressif", "发送新行", None))
+        self.TabWidget.setTabText(self.TabWidget.indexOf(self.tab_3), _translate("Espressif", "单行发送", None))
+        self.inFoSend_M.setText(_translate("Espressif", "发送", None))
+        self.InFoClear_M.setText(_translate("Espressif", "清除发送", None))
+        self.SendNewLine_M.setText(_translate("Espressif", "发送新行", None))
+        self.TabWidget.setTabText(self.TabWidget.indexOf(self.tab_4), _translate("Espressif", "多行发送", None))
 
 
 if __name__ == "__main__":
